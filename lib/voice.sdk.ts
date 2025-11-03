@@ -1,6 +1,6 @@
 'use client';
 
-import { getGeminiResponse } from "./gemini";
+import { getTutorResponse } from "./agent";
 
 class VoiceSdk {
   private recognition: SpeechRecognition | null = null;
@@ -96,7 +96,7 @@ class VoiceSdk {
     });
 
     try {
-      const response = await getGeminiResponse(
+      const response = await getTutorResponse(
         transcript,
         this.config,
         this.conversationHistory
