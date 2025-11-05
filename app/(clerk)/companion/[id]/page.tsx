@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ const CompanionSession = () => {
   const router = useRouter();
   const params = useParams(); // <-- use useParams hook here
   const { user, isLoaded } = useUser();
+  const searchParams = useSearchParams();
 
   const [companion, setCompanion] = useState<Companion | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,7 @@ const CompanionSession = () => {
   }
 
   const { name, subject, topic, duration } = companion;
+  const initialReview = searchParams.get('review') || undefined;
 
   return (
     <main>
@@ -86,6 +88,7 @@ const CompanionSession = () => {
         companionId={params.id as string}
         userName={user?.firstName || "User"}
         userImage={user?.imageUrl || ""}
+        initialUserMessage={initialReview}
       />
     </main>
   );

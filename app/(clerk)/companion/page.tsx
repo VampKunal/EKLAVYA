@@ -23,7 +23,7 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
                 </div>
             </section>
             <section className="companions-grid">
-                <Link href="/companion/new" className="companion-card flex flex-col items-center justify-center hover:bg-accent cursor-pointer">
+                <Link href="/companion/new" className="companion-card flex flex-col items-center justify-center cursor-pointer">
                     <PlusCircleIcon className="icon size-12" />
                     <p>Create a new companion</p>
                 </Link>

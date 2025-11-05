@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookmarkIcon, BookmarkPlusIcon, ClockIcon } from "lucide-react";
+import { HoverDevCard } from "@/components/ui/hover-dev-card";
 
 interface CompanionCardProps {
   id: string;
@@ -35,7 +36,7 @@ const CompanionCard = ({
     }
   };
   return (
-    <article className="companion-card">
+    <HoverDevCard>
       <div className="flex justify-between items-center">
         <Badge style={{backgroundColor: color, color: "#000"}}>{subject}</Badge>
         <Button size="icon" className="rounded-full" onClick={handleBookmark}>
@@ -55,7 +56,7 @@ const CompanionCard = ({
           Launch Lesson
         </button>
       </Link>
-    </article>
+    </HoverDevCard>
   );
 };
 

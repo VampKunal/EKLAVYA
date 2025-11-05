@@ -24,6 +24,7 @@ interface CompanionComponentProps {
     name: string;
     userName: string;
     style: string;
+    initialUserMessage?: string;
 }
 
 interface Message {
@@ -40,6 +41,7 @@ const CompanionComponent = ({
     name, 
     userName, 
     style, 
+    initialUserMessage,
 }: CompanionComponentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -179,6 +181,13 @@ const CompanionComponent = ({
                 style,
                 name
             });
+            if (initialUserMessage && initialUserMessage.trim()) {
+                try {
+                    await companionVoice.sendTextMessage(initialUserMessage.trim());
+                } catch (e) {
+                    console.error('Failed to send initial message:', e);
+                }
+            }
         } catch (error) {
             console.error('Failed to start voice session:', error);
             setCallStatus(CallStatus.FINISHED);
