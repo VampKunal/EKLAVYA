@@ -14,7 +14,7 @@ interface BaseLLMOptions {
 
 export async function getLLMResponse({
   prompt,
-  model = 'gemini-1.5-flash',
+  model = 'gemini-2.0-flash',
 }: BaseLLMOptions): Promise<string> {
   const response = await openai.chat.completions.create({
     model,
