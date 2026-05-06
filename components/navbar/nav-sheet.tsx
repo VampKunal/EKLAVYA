@@ -15,17 +15,23 @@ export const NavSheet = () => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="glass-morphism border-l border-white/10 p-10 flex flex-col">
         <Logo />
-        <div className="flex flex-col space-y-2 my-auto mx-2">
+        <div className="flex flex-col gap-8 mt-16">
           {navItems.map(({label, href}) => 
-            <Button asChild key={label} variant="ghost">
-              <Link href={href}>{label}</Link>
-            </Button>
+            <Link 
+              key={label} 
+              href={href}
+              className="text-4xl font-black uppercase tracking-tighter hover:text-magenta transition-colors"
+            >
+              {label}
+            </Link>
           )}
           <SignedOut>
             <SignInButton>
-              <Button variant="outline" className="mt-4">Sign In</Button>
+              <Button variant="outline" className="mt-4 text-[10px] uppercase tracking-[3px] font-bold border-white/10 hover:bg-magenta hover:text-white transition-all">
+                Sign In
+              </Button>
             </SignInButton>
           </SignedOut>
         </div>

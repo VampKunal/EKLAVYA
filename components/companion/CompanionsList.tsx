@@ -21,67 +21,68 @@ interface CompanionsListProps {
 
 const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) => {
     return (
-        <article className={cn('companion-list', classNames)}>
-            <h2 className="font-bold text-3xl">{title}</h2>
+        <article className={cn('relative z-10', classNames)}>
+            {title && (
+                <div className="flex flex-col sm:flex-row justify-between items-baseline mb-10 gap-4">
+                    <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter magenta-slash">{title}</h2>
+                    <span className="text-[10px] uppercase tracking-[4px] opacity-40 font-bold">[ Index_Sync_Node ]</span>
+                </div>
+            )}
 
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="text-lg w-2/3">Lessons</TableHead>
-                        <TableHead className="text-lg">Subject</TableHead>
-                        <TableHead className="text-lg text-right">Duration</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {companions?.map(({id, subject, name, topic, duration}, index) => (
-                        <TableRow key={index}>
-                            <TableCell>
-                                <Link href={`/companion/${id}`}>
-                                    <div className="flex items-center gap-2">
-                                        <div className="size-[48px] flex items-center justify-center rounded-full max-md:hidden" style={{ backgroundColor: getSubjectColor(subject) }}>
+            <div className="border-t border-white/5 overflow-x-auto custom-scrollbar">
+                <Table className="w-full text-left min-w-[600px] border-collapse">
+                    <TableHeader>
+                        <TableRow className="border-b border-white/5 hover:bg-transparent">
+                            <TableHead className="py-8 font-black uppercase text-[10px] tracking-[3px] opacity-40 text-white">Lessons</TableHead>
+                            <TableHead className="py-8 font-black uppercase text-[10px] tracking-[3px] opacity-40 text-white">Subject</TableHead>
+                            <TableHead className="py-8 font-black uppercase text-[10px] tracking-[3px] opacity-40 text-right text-white">Duration</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody className="divide-y divide-white/[0.03]">
+                        {companions?.map(({id, subject, name, topic, duration}, index) => (
+                            <TableRow key={index} className="hover:bg-white/[0.02] transition-colors group border-white/5">
+                                <TableCell className="py-8">
+                                    <Link href={`/companion/${id}`} className="flex items-center gap-6">
+                                        <div 
+                                            className="size-12 flex items-center justify-center border border-white/10 bg-black/40 grayscale group-hover:grayscale-0 transition-all duration-500"
+                                            style={{ borderLeftWidth: '3px', borderLeftColor: getSubjectColor(subject) }}
+                                        >
                                             <Image
                                                 src={`/icons/${subject}.svg`}
                                                 alt={subject}
-                                                width={28}
-                                                height={28} />
+                                                width={24}
+                                                height={24}
+                                                className="opacity-40 group-hover:opacity-100 transition-opacity"
+                                            />
                                         </div>
                                         <div className="flex flex-col gap-1">
-                                            <p className="font-bold text-xl">
+                                            <p className="font-black text-lg uppercase tracking-tight italic group-hover:text-magenta transition-colors">
                                                 {name}
                                             </p>
-                                            <p className="text-md truncate">
+                                            <p className="text-[10px] uppercase tracking-[2px] opacity-40 font-bold truncate max-w-[300px]">
                                                 {topic}
                                             </p>
                                         </div>
+                                    </Link>
+                                </TableCell>
+                                <TableCell className="py-8">
+                                    <span 
+                                        className="text-[10px] font-black tracking-widest px-3 py-1 border border-white/10 group-hover:border-magenta group-hover:text-magenta transition-all"
+                                        style={{ color: getSubjectColor(subject) }}
+                                    >
+                                        {subject.toUpperCase()}
+                                    </span>
+                                </TableCell>
+                                <TableCell className="py-8 text-right">
+                                    <div className="flex items-center gap-3 justify-end text-white/40 font-serif italic text-base">
+                                        {duration} <span className="text-[9px] uppercase tracking-widest opacity-40 not-italic">MINS</span>
                                     </div>
-                                </Link>
-                            </TableCell>
-                            <TableCell>
-                                <Badge style={{backgroundColor: getSubjectColor(subject), color: "#000"}} className="w-fit max-md:hidden">
-                                    {subject}
-                                </Badge>
-                                <div className="flex items-center justify-center rounded-lg w-fit p-2 md:hidden" style={{backgroundColor: getSubjectColor(subject)}}>
-                                    <Image
-                                        src={`/icons/${subject}.svg`}
-                                        alt={subject}
-                                        width={18}
-                                        height={18}
-                                    />
-                                </div>
-                            </TableCell>
-                            <TableCell>
-                                <div className="flex items-center gap-2 w-full justify-end">
-                                    <p className="text-lg">
-                                        {duration} {' '}
-                                        <span className="max-md:hidden">mins</span>
-                                    </p>
-                                    <ClockIcon className="md:hidden size-4" />
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </article>
     )
 }

@@ -16,11 +16,16 @@ interface NavMenuProps extends NavigationMenuProps {
 
 export const NavMenu = ({ items, ...props }: NavMenuProps) => (
   <NavigationMenu {...props}>
-    <NavigationMenuList className="space-x-0 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start font-semibold">
+    <NavigationMenuList className="space-x-8 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start">
       {items.map(({ label, href }) => (
         <NavigationMenuItem key={href}>
-          <NavigationMenuLink className="hover:bg-muted p-2 px-4 rounded-full" asChild>
-            <Link href={href}>{label}</Link>
+          <NavigationMenuLink asChild>
+            <Link 
+              href={href}
+              className="text-[10px] uppercase tracking-[3px] font-bold transition-all hover:text-magenta"
+            >
+              {label}
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       ))}

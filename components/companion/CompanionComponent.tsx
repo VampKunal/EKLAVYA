@@ -202,74 +202,96 @@ const CompanionComponent = ({
     }
 
     return (
-        <div className="flex h-[70vh] gap-4">
+        <div className="flex flex-col md:flex-row h-full">
             {/* Main Companion Section */}
-            <section className="flex flex-col flex-1">
+            <section className="flex flex-col flex-1 p-8 md:p-10 border-r border-white/5">
                 {!isSpeechSupported && (
-                    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
-                        <p className="font-bold">Browser Not Supported</p>
-                        <p>Speech recognition is not supported in your current browser. Please use Chrome, Safari, or Edge for the best experience.</p>
+                    <div className="bg-magenta/10 border-l-4 border-magenta text-magenta p-6 mb-8 text-[11px] uppercase tracking-[2px] font-bold">
+                        <p className="font-black mb-1">SYSTEM_ERROR // Browser Not Supported</p>
+                        <p className="opacity-80">Speech recognition is not supported in your current browser. Please use Chrome, Safari, or Edge.</p>
                     </div>
                 )}
                 
                 {/* Voice Settings - placed at the top */}
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end mb-10">
                     <VoiceSetting
                         onSettingsChange={handleVoiceSettingsChange}
                         initialSettings={voiceSettings}
                     />
                 </div>
                 
-                <section className="flex p-2 gap-8 max-sm:flex-col">
-                    <div className="companion-section">
-                        <div className="companion-avatar" style={{ backgroundColor: getSubjectColor(subject)}}>
+                <div className="flex flex-col items-center justify-center flex-grow py-10">
+                    <div className="relative group">
+                        <div 
+                            className="size-[240px] md:size-[300px] flex items-center justify-center border border-white/10 bg-black/20 backdrop-blur-xl relative z-10 overflow-hidden"
+                            style={{ borderLeft: `4px solid ${getSubjectColor(subject) || 'var(--color-magenta)'}` }}
+                        >
                             <Lottie
                                 lottieRef={lottieRef}
                                 animationData={soundwaves}
                                 autoplay={false}
-                                className="companion-lottie"
+                                className="w-full h-full opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700"
                             />
+                            
+                            {isSpeaking && (
+                                <div className="absolute inset-0 bg-magenta/5 animate-pulse pointer-events-none" />
+                            )}
                         </div>
+                        
+                        {/* Decorative corners */}
+                        <div className="absolute -top-2 -left-2 size-6 border-t-2 border-l-2 border-magenta z-20" />
+                        <div className="absolute -bottom-2 -right-2 size-6 border-b-2 border-r-2 border-magenta z-20" />
+                    </div>
 
-                        {/* Current voice settings display */}
-                        {callStatus !== CallStatus.INACTIVE && (
-                            <div className="text-xs text-muted-foreground text-center mt-2">
-                                Voice: {voiceSettings.voice ? voiceSettings.voice.split(' ')[0] : 'Default'} | 
-                                Rate: {voiceSettings.rate.toFixed(1)} | 
-                                Pitch: {voiceSettings.pitch.toFixed(1)}
-                            </div>
-                        )}
+                    {/* Current voice settings display */}
+                    {callStatus !== CallStatus.INACTIVE && (
+                        <div className="text-[10px] uppercase tracking-[3px] font-black italic opacity-40 mt-10 flex gap-6">
+                            <span>VOICE // {voiceSettings.voice ? voiceSettings.voice.split(' ')[0] : 'NEURAL'}</span>
+                            <span>SYNC // {voiceSettings.rate.toFixed(1)}X</span>
+                        </div>
+                    )}
 
-                        {/* Microphone Control (only show in voice mode) */}
+                    <div className="mt-12 w-full max-w-sm flex flex-col gap-6">
+                        {/* Microphone Control */}
                         {callStatus === CallStatus.ACTIVE && (
                             <button 
-                                className="btn-mic" 
+                                className="flex flex-col items-center gap-4 py-8 border border-white/5 bg-white/5 hover:bg-white/10 transition-all group" 
                                 onClick={toggleMicrophone}
                             >
-                                {isMuted ? <MicOffIcon className="size-12" /> : <MicIcon className="size-12" />}
+                                <div className={cn(
+                                    "p-4 rounded-full transition-all duration-500",
+                                    isMuted ? "bg-white/10 text-white/40" : "bg-magenta text-white shadow-[0_0_20px_rgba(255,0,110,0.4)]"
+                                )}>
+                                    {isMuted ? <MicOffIcon size={24} /> : <MicIcon size={24} />}
+                                </div>
+                                <span className="text-[10px] uppercase tracking-[4px] font-black opacity-40 group-hover:opacity-100 transition-opacity">
+                                    {isMuted ? 'Microphone_Off' : 'Microphone_On'}
+                                </span>
                             </button>
                         )}
 
                         {/* Start/End Session Button */}
                         <button 
                             className={cn(
-                                'rounded-lg py-2 cursor-pointer transition-colors w-full text-white', 
-                                callStatus === CallStatus.ACTIVE ? 'bg-destructive' : 'bg-primary', 
+                                'py-5 text-[11px] uppercase tracking-[4px] font-black transition-all relative overflow-hidden', 
+                                callStatus === CallStatus.ACTIVE 
+                                    ? 'bg-transparent border border-white/20 text-white hover:bg-white hover:text-black' 
+                                    : 'bg-magenta text-white hover:scale-[1.02] shadow-xl', 
                                 callStatus === CallStatus.CONNECTING && 'animate-pulse',
-                                !isSpeechSupported && 'opacity-50 cursor-not-allowed'
+                                (!isSpeechSupported || !isInitialized) && 'opacity-20 cursor-not-allowed'
                             )} 
                             onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}
                             disabled={!isSpeechSupported || !isInitialized}
                         >
                             {callStatus === CallStatus.ACTIVE
-                            ? "End Session"
-                            : callStatus === CallStatus.CONNECTING
-                                ? 'Connecting'
-                            : 'Start Session'
+                                ? "Terminate_Link"
+                                : callStatus === CallStatus.CONNECTING
+                                    ? 'Synchronizing...'
+                                : 'Initialize_Protocol'
                             }
                         </button>
                     </div>
-                </section>
+                </div>
             </section>
 
             {/* Conversation History Sidebar */}

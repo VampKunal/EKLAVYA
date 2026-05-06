@@ -62,17 +62,19 @@ export default function SourceUploader({ companionId }: SourceUploaderProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 border rounded-xl bg-card shadow-sm">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Add Source Document</h3>
-        <p className="text-sm text-muted-foreground">
-          Upload a PDF or TXT file to give your companion context.
+    <div className="w-full max-w-md p-8 border border-white/5 bg-black/20 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+      <div className="absolute top-0 right-0 p-4 text-[8px] uppercase tracking-[2px] opacity-10 font-black italic">UPLOAD_GATE // 07</div>
+      
+      <div className="mb-10">
+        <h3 className="text-xs uppercase tracking-[4px] font-black text-white/40 mb-2">Neural_Ingestion</h3>
+        <p className="text-[10px] uppercase tracking-[2px] font-bold opacity-30 leading-relaxed">
+          Upload PDF/TXT datasets to synchronize your node's knowledge parameters.
         </p>
       </div>
 
       <div
-        className={`relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors cursor-pointer
-          ${file ? "border-primary/50 bg-primary/5" : "border-muted-foreground/25 hover:bg-accent/50"}
+        className={`relative flex flex-col items-center justify-center p-12 border border-dashed transition-all duration-500 cursor-pointer group/upload
+          ${file ? "border-magenta bg-magenta/5 shadow-[0_0_20px_rgba(255,0,110,0.1)]" : "border-white/10 hover:border-magenta/50 hover:bg-white/5"}
         `}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -88,50 +90,46 @@ export default function SourceUploader({ companionId }: SourceUploaderProps) {
 
         {file ? (
           <div className="flex flex-col items-center text-center">
-            <FileText className="size-10 text-primary mb-2" />
-            <p className="font-medium text-sm truncate max-w-[200px]">{file.name}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {(file.size / 1024 / 1024).toFixed(2)} MB
+            <FileText className="size-12 text-magenta mb-4 animate-pulse" />
+            <p className="text-[10px] uppercase tracking-[2px] font-black text-white truncate max-w-[200px]">{file.name}</p>
+            <p className="text-[8px] uppercase tracking-[3px] font-black opacity-20 mt-2">
+              SIZE // {(file.size / 1024 / 1024).toFixed(2)} MB
             </p>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
-            <UploadCloud className="size-10 text-muted-foreground mb-2" />
-            <p className="font-medium text-sm">Click to upload or drag and drop</p>
-            <p className="text-xs text-muted-foreground mt-1">PDF or TXT (Max 10MB)</p>
+            <UploadCloud className="size-12 text-white/10 group-hover/upload:text-magenta transition-colors mb-4" />
+            <p className="text-[10px] uppercase tracking-[3px] font-black opacity-40 group-hover/upload:opacity-100 transition-opacity">Initialize_Upload</p>
+            <p className="text-[8px] uppercase tracking-[2px] opacity-20 mt-2 font-black">MAX_LOAD // 10MB</p>
           </div>
         )}
       </div>
 
       {status === "error" && (
-        <div className="mt-4 p-3 bg-destructive/10 text-destructive text-sm rounded-md flex items-center gap-2">
+        <div className="mt-6 p-4 bg-magenta/10 border-l-2 border-magenta text-magenta text-[10px] uppercase tracking-[2px] font-black flex items-center gap-3">
           <AlertCircle className="size-4" />
           {errorMessage}
         </div>
       )}
 
       {status === "success" && (
-        <div className="mt-4 p-3 bg-green-500/10 text-green-600 dark:text-green-400 text-sm rounded-md flex items-center gap-2">
+        <div className="mt-6 p-4 bg-green-500/10 border-l-2 border-green-500 text-green-500 text-[10px] uppercase tracking-[2px] font-black flex items-center gap-3">
           <CheckCircle2 className="size-4" />
-          Document processed and vectorized successfully!
+          Ingestion_Success // Vectorized
         </div>
       )}
 
-      <div className="mt-4 flex justify-end">
-        <Button
+      <div className="mt-8">
+        <button
           disabled={!file || isUploading}
           onClick={handleUpload}
-          className="w-full"
+          className="w-full bg-white text-black py-4 text-[10px] uppercase tracking-[4px] font-black hover:bg-magenta hover:text-white transition-all disabled:opacity-20 shadow-xl relative overflow-hidden group/btn"
         >
-          {isUploading ? (
-            <>
-              <Loader2 className="mr-2 size-4 animate-spin" />
-              Processing & Embedding...
-            </>
-          ) : (
-            "Upload & Process"
-          )}
-        </Button>
+          <span className="relative z-10">
+            {isUploading ? "Processing_Sync..." : "Execute_Ingestion"}
+          </span>
+          <div className="absolute inset-0 bg-magenta translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500"></div>
+        </button>
       </div>
     </div>
   );

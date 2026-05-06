@@ -1,5 +1,7 @@
+import Link from "next/link";
+
 export const Logo = () => (
-  <h2 className="font-bold text-xl p-4">
-    <span className="bg-primary text-background p-1 px-2 rounded-md mr-1">Ek</span>alavya
-  </h2>
+  <Link href="/" className="font-display text-2xl md:text-3xl font-black tracking-tighter uppercase whitespace-nowrap hover:opacity-80 transition-opacity">
+    Neural<span className="text-magenta">_Learn</span>
+  </Link>
 );

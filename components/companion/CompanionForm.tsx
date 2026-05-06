@@ -59,125 +59,131 @@ const CompanionForm = () => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Companion name</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Enter the companion name"
-                                    {...field}
-                                    className="input"
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="subject"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Subject</FormLabel>
-                            <FormControl>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    defaultValue={field.value}
-                                >
-                                    <SelectTrigger className="input capitalize">
-                                        <SelectValue placeholder="Select the subject" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {subjects.map((subject) => (
-                                            <SelectItem
-                                                value={subject}
-                                                key={subject}
-                                                className="capitalize"
-                                            >
-                                                {subject}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                                <FormLabel className="text-[10px] uppercase tracking-[4px] font-black opacity-40">Companion_Identifier</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Ex. Neural_tutor_v1"
+                                        {...field}
+                                        className="bg-black/40 border-white/10 rounded-none h-14 px-6 text-[11px] uppercase tracking-[2px] focus-visible:ring-magenta focus-visible:border-magenta transition-all"
+                                    />
+                                </FormControl>
+                                <FormMessage className="text-[10px] text-magenta uppercase tracking-widest font-black" />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="subject"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                                <FormLabel className="text-[10px] uppercase tracking-[4px] font-black opacity-40">Subject_Domain</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger className="bg-black/40 border-white/10 rounded-none h-14 px-6 text-[11px] uppercase tracking-[2px] focus:ring-magenta transition-all">
+                                            <SelectValue placeholder="Select Sector" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-surface-container border-white/10 rounded-none">
+                                            {subjects.map((subject) => (
+                                                <SelectItem
+                                                    value={subject}
+                                                    key={subject}
+                                                    className="uppercase tracking-[2px] text-[10px] focus:bg-magenta focus:text-white"
+                                                >
+                                                    {subject}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage className="text-[10px] text-magenta uppercase tracking-widest font-black" />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
                 <FormField
                     control={form.control}
                     name="topic"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>What should the companion help with?</FormLabel>
+                        <FormItem className="space-y-4">
+                            <FormLabel className="text-[10px] uppercase tracking-[4px] font-black opacity-40">Knowledge_Parameters</FormLabel>
                             <FormControl>
                                 <Textarea
-                                    placeholder="Ex. Derivates & Integrals"
+                                    placeholder="Define the scope of interaction (e.g., Quantum Mechanics Fundamentals)"
                                     {...field}
-                                    className="input"
+                                    className="bg-black/40 border-white/10 rounded-none min-h-[120px] p-6 text-[11px] uppercase tracking-[2px] focus-visible:ring-magenta focus-visible:border-magenta transition-all"
                                 />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage className="text-[10px] text-magenta uppercase tracking-widest font-black" />
                         </FormItem>
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="style"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Style</FormLabel>
-                            <FormControl>
-                                <Select
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    defaultValue={field.value}
-                                >
-                                    <SelectTrigger className="input">
-                                        <SelectValue
-                                            placeholder="Select the style"
-                                        />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="formal">
-                                            Formal
-                                        </SelectItem>
-                                        <SelectItem value="casual">
-                                            Casual
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <FormField
+                        control={form.control}
+                        name="style"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                                <FormLabel className="text-[10px] uppercase tracking-[4px] font-black opacity-40">Interaction_Protocol</FormLabel>
+                                <FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger className="bg-black/40 border-white/10 rounded-none h-14 px-6 text-[11px] uppercase tracking-[2px] focus:ring-magenta transition-all">
+                                            <SelectValue placeholder="Select Style" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-surface-container border-white/10 rounded-none">
+                                            <SelectItem value="formal" className="uppercase tracking-[2px] text-[10px] focus:bg-magenta focus:text-white">Formal // Academic</SelectItem>
+                                            <SelectItem value="casual" className="uppercase tracking-[2px] text-[10px] focus:bg-magenta focus:text-white">Casual // Intuitive</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage className="text-[10px] text-magenta uppercase tracking-widest font-black" />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="duration"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Estimated session duration in minutes</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="number"
-                                    placeholder="15"
-                                    {...field}
-                                    className="input"
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit" className="w-full cursor-pointer">Build Your Companion</Button>
+                    <FormField
+                        control={form.control}
+                        name="duration"
+                        render={({ field }) => (
+                            <FormItem className="space-y-4">
+                                <FormLabel className="text-[10px] uppercase tracking-[4px] font-black opacity-40">Sync_Duration (Min)</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        placeholder="15"
+                                        {...field}
+                                        className="bg-black/40 border-white/10 rounded-none h-14 px-6 text-[11px] uppercase tracking-[2px] focus-visible:ring-magenta focus-visible:border-magenta transition-all"
+                                    />
+                                </FormControl>
+                                <FormMessage className="text-[10px] text-magenta uppercase tracking-widest font-black" />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                <button 
+                    type="submit" 
+                    className="w-full bg-magenta text-white py-5 text-[11px] uppercase tracking-[5px] font-black hover:bg-white hover:text-black transition-all shadow-xl relative overflow-hidden group"
+                >
+                    <span className="relative z-10">Initialize_Construction</span>
+                    <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                </button>
             </form>
         </Form>
     )

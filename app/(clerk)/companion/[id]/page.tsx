@@ -56,48 +56,71 @@ const CompanionSession = () => {
   const initialReview = searchParams.get('review') || undefined;
 
   return (
-    <main className="h-full flex flex-col space-y-6">
-      <article className="flex rounded-border justify-between p-6 max-md:flex-col shadow-sm border bg-card/50">
-        <div className="flex items-center gap-2">
+    <main className="flex-grow w-full max-w-7xl mx-auto px-6 md:px-10 py-12 xl:pl-[120px] relative reveal-section">
+      <article className="border border-white/10 bg-surface-container p-8 md:p-10 mb-10 flex justify-between items-center relative overflow-hidden group img-box-texture shadow-2xl">
+        <div className="flex items-center gap-8 md:gap-12 relative z-10">
           <div
-            className="size-[72px] flex items-center justify-center rounded-lg max-md:hidden"
-            style={{ backgroundColor: getSubjectColor(subject) }}
+            className="size-20 md:size-24 flex items-center justify-center border border-white/20 grayscale group-hover:grayscale-0 transition-all duration-700 bg-black/40"
+            style={{ borderLeftWidth: '4px', borderLeftColor: getSubjectColor(subject) || 'var(--color-magenta)' }}
           >
             <Image
               src={`/icons/${subject}.svg`}
               alt={subject}
-              width={35}
-              height={35}
+              width={40}
+              height={40}
+              className="opacity-60 group-hover:opacity-100 transition-opacity"
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <p className="font-bold text-2xl">{name}</p>
-              <Badge className="max-sm:hidden">{subject}</Badge>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic text-white group-hover:text-magenta transition-colors">
+                {name}
+              </h1>
+              <span className="text-[10px] uppercase tracking-[3px] font-black py-1 px-3 border border-white/10 bg-white/5 opacity-60">
+                {subject}
+              </span>
             </div>
-            <p className="text-lg text-muted-foreground">{topic}</p>
+            <p className="text-xs md:text-sm uppercase tracking-[2px] opacity-40 font-bold max-w-2xl leading-relaxed">
+              <span className="text-magenta mr-3 font-black">/</span> {topic}
+            </p>
           </div>
         </div>
-        <div className="items-start text-2xl max-md:hidden text-muted-foreground">
-          {duration} minutes
+        
+        <div className="hidden lg:flex flex-col items-end gap-2 relative z-10">
+          <div className="text-[10px] uppercase tracking-[4px] opacity-30 font-bold">SESSION_DURATION</div>
+          <div className="text-3xl font-serif italic text-white/80">{duration} <span className="text-sm uppercase tracking-widest opacity-40 not-italic ml-1">MINS</span></div>
+        </div>
+
+        {/* Decorative background number */}
+        <div className="absolute right-[-20px] top-[-40px] text-[150px] font-black text-white/[0.02] pointer-events-none select-none">
+          01
         </div>
       </article>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left Pane: Sources (NotebookLM style) */}
-        <div className="md:col-span-1 space-y-6 flex flex-col">
-          <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
-            <h2 className="text-xl font-bold mb-2">Notebook Guide</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              Upload your documents, notes, and study material here. Your AI companion will use this to accurately tutor you.
+        <div className="lg:col-span-4 space-y-10">
+          <div className="p-8 border border-white/5 bg-surface-container-low backdrop-blur-sm relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-12 bg-magenta"></div>
+            <h2 className="text-xs uppercase tracking-[4px] font-black mb-6 flex items-center gap-3">
+              <span className="text-magenta">01</span> Notebook_Guide
+            </h2>
+            <p className="text-[11px] uppercase tracking-[2px] leading-relaxed opacity-40 font-medium">
+              Initialize cognitive sync by uploading training data. Sources provide the neural weights for personalized tutoring.
             </p>
           </div>
-          <SourceUploader companionId={params.id as string} />
+          
+          <div className="glass-morphism p-1">
+            <SourceUploader companionId={params.id as string} />
+          </div>
         </div>
 
         {/* Right Pane: Companion Chat */}
-        <div className="md:col-span-2 border rounded-xl overflow-hidden shadow-sm bg-card flex flex-col">
+        <div className="lg:col-span-8 border border-white/5 bg-surface-container relative shadow-2xl flex flex-col min-h-[600px]">
+          <div className="absolute top-0 right-0 p-4 text-[9px] uppercase tracking-[2px] opacity-20 font-black italic z-20">
+            CONNECTION // ENCRYPTED
+          </div>
           <CompanionComponent
             {...companion}
             companionId={params.id as string}

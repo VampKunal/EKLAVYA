@@ -36,18 +36,21 @@ const CompanionConversation = ({
     });
 
   return (
-    <section className="w-1/3 min-w-[300px] flex flex-col border-l border-gray-200 pl-4">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Conversation History</h3>
-        <p className="text-sm text-muted">
-          {messages.length > 0 ? `${messages.length} messages` : 'No messages yet'}
+    <section className="w-full md:w-[400px] flex flex-col p-8 md:p-10 bg-black/20 backdrop-blur-sm">
+      <div className="mb-10 flex justify-between items-baseline">
+        <h3 className="text-xs uppercase tracking-[4px] font-black text-white/40">Log_History</h3>
+        <p className="text-[10px] uppercase tracking-[2px] font-black italic text-magenta">
+          {messages.length} // MESSAGES
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto max-h-[50vh] space-y-3 pr-2">
+      <div className="flex-1 overflow-y-auto max-h-[60vh] space-y-8 pr-4 custom-scrollbar mb-10">
         {messages.length === 0 ? (
-          <div className="text-center text-muted mt-8">
-            <p>Start a conversation to see the history here</p>
+          <div className="flex flex-col items-center justify-center h-full opacity-20 text-center space-y-4">
+            <div className="size-12 border border-white/20 rounded-full flex items-center justify-center">
+              <span className="text-xs">!</span>
+            </div>
+            <p className="text-[10px] uppercase tracking-[3px] font-black">Waiting_For_Neural_Sync</p>
           </div>
         ) : (
           <>
@@ -55,69 +58,91 @@ const CompanionConversation = ({
               <div
                 key={index}
                 className={cn(
-                  'p-3 rounded-lg max-w-full',
-                  message.role === 'assistant' ? 'bg-muted mr-4' : 'bg-primary/10 ml-4'
+                  'flex flex-col gap-3',
+                  message.role === 'assistant' ? 'items-start' : 'items-end'
                 )}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-sm">
-                    {message.role === 'assistant' ? name.split(' ')[0].replace(/[.,]/g, '') : userName}
+                <div className="flex items-center gap-4">
+                  <span className={cn(
+                    "text-[9px] uppercase tracking-[3px] font-black",
+                    message.role === 'assistant' ? "text-magenta" : "text-white/40"
+                  )}>
+                    {message.role === 'assistant' ? "NODE // " + name.split(' ')[0].toUpperCase() : "USER // " + userName.toUpperCase()}
                   </span>
-                {message.timestamp &&
-                  <span className="text-xs text-muted">{formatTimestamp(message.timestamp)}</span>
-                }
+                  {message.timestamp &&
+                    <span className="text-[8px] uppercase tracking-[2px] opacity-20 italic">{formatTimestamp(message.timestamp)}</span>
+                  }
                 </div>
-                <p className="text-sm leading-relaxed">{message.content}</p>
+                <div className={cn(
+                  'p-5 text-[11px] uppercase tracking-[1px] leading-relaxed font-medium border relative',
+                  message.role === 'assistant' 
+                    ? 'bg-white/5 border-white/10 text-white/80 rounded-tr-xl rounded-br-xl rounded-bl-xl' 
+                    : 'bg-magenta/10 border-magenta/20 text-magenta rounded-tl-xl rounded-br-xl rounded-bl-xl'
+                )}>
+                  {message.content}
+                </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </>
         )}
-
       </div>
-        {callStatus === 'ACTIVE' && (
-          <form onSubmit={handleTextSubmit} className="w-full bottom-0 sticky bg-muted py-2">
-            <div className="flex gap-2">
+
+      {callStatus === 'ACTIVE' && (
+        <form onSubmit={handleTextSubmit} className="relative mt-auto">
+          <div className="flex flex-col gap-4">
+            <div className="relative">
               <input
                 type="text"
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="INPUT_NEURAL_COMMAND..."
+                className="w-full bg-black/40 border border-white/10 px-6 py-4 text-[10px] uppercase tracking-[3px] font-black focus:outline-none focus:border-magenta/50 transition-colors"
                 disabled={callStatus !== 'ACTIVE'}
               />
-              <Button
-                type="submit"
-                disabled={!textInput.trim() || callStatus !== 'ACTIVE'}
-              >
-                Send
-              </Button>
+              <div className="absolute top-0 right-0 h-full flex items-center px-4">
+                <div className="size-2 bg-magenta animate-pulse" />
+              </div>
             </div>
-          </form>
-        )}
-      {/* Session Status */}
-      <div className="mt-4 pt-3 border-t border-2">
-        <div className="flex items-center gap-2">
-          <div
-            className={cn(
-              'w-2 h-2 rounded-full',
-              callStatus === 'ACTIVE'
-                ? 'bg-green-500'
+            <button
+              type="submit"
+              disabled={!textInput.trim() || callStatus !== 'ACTIVE'}
+              className="bg-white text-black py-4 text-[10px] uppercase tracking-[4px] font-black hover:bg-magenta hover:text-white transition-all disabled:opacity-20"
+            >
+              Execute_Command
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Session Status Indicator */}
+      <div className="mt-10 pt-6 border-t border-white/5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                'size-1.5 rounded-full',
+                callStatus === 'ACTIVE'
+                  ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'
+                  : callStatus === 'CONNECTING'
+                  ? 'bg-yellow-500 animate-pulse'
+                  : 'bg-white/10'
+              )}
+            />
+            <span className="text-[9px] uppercase tracking-[3px] font-black opacity-30 italic">
+              {callStatus === 'ACTIVE'
+                ? 'Status // Link_Stable'
                 : callStatus === 'CONNECTING'
-                ? 'bg-yellow-500 animate-pulse'
-                : 'bg-gray-400'
-            )}
-          />
-          <span className="text-sm text-muted">
-            {callStatus === 'ACTIVE'
-              ? 'Session Active'
-              : callStatus === 'CONNECTING'
-              ? 'Connecting...'
-              : callStatus === 'FINISHED'
-              ? 'Session Ended'
-              : 'Ready to Start'}
-          </span>
+                ? 'Status // Syncing...'
+                : callStatus === 'FINISHED'
+                ? 'Status // Link_Terminated'
+                : 'Status // Ready_For_Link'}
+            </span>
+          </div>
+          <div className="text-[8px] uppercase tracking-[2px] opacity-20 font-black">
+            EKV_V.04 // CORE
+          </div>
         </div>
       </div>
     </section>

@@ -42,14 +42,17 @@ const SearchInput = () => {
   }, [searchQuery, router, searchParams, pathname]);
 
   return (
-    <div className="relative border border-border rounded-lg items-center flex gap-2 p-2 sm:w-[350px] w-full h-fit">
-      <SearchIcon className="size-4" />
+    <div className="relative group sm:w-[350px] w-full">
+      <div className="absolute left-6 top-1/2 -translate-y-1/2">
+        <SearchIcon className="size-4 text-white/20 group-focus-within:text-magenta transition-colors" />
+      </div>
       <input
-        placeholder="Search companions..."
-        className="outline-none "
+        placeholder="SEARCH_COGNITIVE_NODES..."
+        className="w-full bg-black/40 border border-white/10 h-14 pl-14 pr-6 text-[10px] uppercase tracking-[3px] font-black focus:outline-none focus:border-magenta/50 transition-all placeholder:text-white/10"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      <div className="absolute bottom-0 left-0 h-[1px] w-0 bg-magenta group-focus-within:w-full transition-all duration-700"></div>
     </div>
   );
 };

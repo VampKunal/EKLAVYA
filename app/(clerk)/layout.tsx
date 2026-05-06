@@ -5,8 +5,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider appearance={{ variables: { colorPrimary: '#fe5933' }} }>
-        <Navbar /> {children}
+    <ClerkProvider appearance={{ variables: { colorPrimary: '#FF006E' }} }>
+        <Navbar /> 
+        {children}
     </ClerkProvider>
   )
 }

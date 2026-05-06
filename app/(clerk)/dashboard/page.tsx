@@ -26,70 +26,72 @@ const Profile = async () => {
   const bookmarkedCompanions = (await getBookmarkedCompanions(user.id)) || [];
 
   return (
-    <main className="max-w-6xl mx-auto p-4 space-y-8">
+    <main className="flex-grow w-full max-w-7xl mx-auto px-6 md:px-10 py-12 xl:pl-[120px] relative reveal-section">
       {/* Welcome Header Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background border border-primary/20 p-8 shadow-xl">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 size-64 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 size-64 bg-blue-500/10 rounded-full blur-3xl" />
-        
-        <div className="flex flex-col md:flex-row justify-between gap-8 items-center relative z-10">
-          <div className="flex gap-6 items-center">
+      <section className="border border-white/10 bg-surface-container p-10 mb-16 relative overflow-hidden group img-box-texture shadow-2xl">
+        <div className="flex flex-col md:flex-row justify-between gap-12 items-center relative z-10">
+          <div className="flex gap-10 items-center">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="absolute -inset-2 bg-magenta blur-xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               <Image
                 src={user.imageUrl}
                 alt={user.firstName!}
-                width={100}
-                height={100}
-                className="rounded-full relative border-2 border-background shadow-2xl object-cover size-24 md:size-28"
+                width={120}
+                height={120}
+                className="relative border border-white/20 grayscale group-hover:grayscale-0 transition-all duration-700 object-cover size-28 md:size-32"
               />
             </div>
-            <div className="flex flex-col gap-1">
-              <h1 className="font-bold text-3xl tracking-tight">
+            <div className="flex flex-col gap-4">
+              <h1 className="massive-text !normal-case !text-4xl md:!text-5xl tracking-tighter italic text-white">
                 Welcome back, {user.firstName}!
               </h1>
-              <p className="text-muted-foreground flex items-center gap-2">
-                <UserCircleIcon className="size-4" />
-                {user.emailAddresses[0].emailAddress}
+              <p className="text-[10px] uppercase tracking-[4px] opacity-40 font-black flex items-center gap-3">
+                <span className="text-magenta">[ Auth_Success ]</span> // {user.emailAddresses[0].emailAddress}
               </p>
             </div>
           </div>
 
-          <div className="flex gap-4 w-full md:w-auto">
+          <div className="flex gap-6 w-full md:w-auto">
             <StatCard 
-              icon={<CheckCircle2Icon className="text-green-500" />} 
+              icon={<CheckCircle2Icon className="text-magenta" size={16} />} 
               value={sessionHistory.length} 
-              label="Lessons Done" 
-              className="bg-green-500/5 border-green-500/10"
+              label="Lessons_Sync" 
             />
             <StatCard 
-              icon={<GraduationCapIcon className="text-primary" />} 
+              icon={<GraduationCapIcon className="text-white" size={16} />} 
               value={companions.length} 
-              label="Companions" 
-              className="bg-primary/5 border-primary/10"
+              label="Nodes_Active" 
             />
           </div>
+        </div>
+        
+        {/* Decorative background number */}
+        <div className="absolute right-[-20px] top-[-40px] text-[200px] font-black text-white/[0.02] pointer-events-none select-none">
+          01
         </div>
       </section>
 
       {/* Main Content Sections */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-          <LayoutDashboardIcon className="size-5 text-primary" />
-          <h2 className="text-xl font-semibold">Your Learning Hub</h2>
+      <div className="space-y-12 lg:pl-10">
+        <div className="flex items-center gap-4 mb-10">
+          <div className="accent-bar w-12"></div>
+          <h2 className="text-xs uppercase tracking-[4px] font-black opacity-40">Cognitive_Network</h2>
         </div>
 
-        <Accordion type="multiple" defaultValue={['recent', 'bookmarks']} className="space-y-4">
-          <AccordionItem value="recent" className="border rounded-2xl px-6 bg-card/30 backdrop-blur-sm overflow-hidden shadow-sm">
-            <AccordionTrigger className="hover:no-underline py-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-orange-500/10">
-                  <HistoryIcon className="size-5 text-orange-500" />
+        <Accordion type="multiple" defaultValue={['recent', 'bookmarks']} className="space-y-8">
+          <AccordionItem value="recent" className="border border-white/5 bg-surface-container-low backdrop-blur-sm overflow-hidden shadow-xl px-8">
+            <AccordionTrigger className="hover:no-underline py-10 group">
+              <div className="flex items-center gap-6">
+                <div className="p-3 border border-white/10 bg-white/5 group-hover:border-magenta transition-colors">
+                  <HistoryIcon className="size-5 text-white/40 group-hover:text-magenta transition-colors" />
                 </div>
-                <span className="text-xl font-bold tracking-tight">Recent Sessions ({sessionHistory.length})</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xl md:text-2xl font-black uppercase tracking-tighter italic text-white group-hover:text-magenta transition-colors">Recent Sessions</span>
+                  <span className="text-[9px] uppercase tracking-[3px] font-black opacity-20">{sessionHistory.length} // TRACES_FOUND</span>
+                </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pb-6">
+            <AccordionContent className="pb-10">
               <CompanionsList
                 title=""
                 companions={sessionHistory}
@@ -97,16 +99,19 @@ const Profile = async () => {
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="bookmarks" className="border rounded-2xl px-6 bg-card/30 backdrop-blur-sm overflow-hidden shadow-sm">
-            <AccordionTrigger className="hover:no-underline py-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-yellow-500/10">
-                  <StarIcon className="size-5 text-yellow-500 fill-yellow-500/20" />
+          <AccordionItem value="bookmarks" className="border border-white/5 bg-surface-container-low backdrop-blur-sm overflow-hidden shadow-xl px-8">
+            <AccordionTrigger className="hover:no-underline py-10 group">
+              <div className="flex items-center gap-6">
+                <div className="p-3 border border-white/10 bg-white/5 group-hover:border-magenta transition-colors">
+                  <StarIcon className="size-5 text-white/40 group-hover:text-magenta transition-colors" />
                 </div>
-                <span className="text-xl font-bold tracking-tight">Bookmarked Companions ({bookmarkedCompanions.length})</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xl md:text-2xl font-black uppercase tracking-tighter italic text-white group-hover:text-magenta transition-colors">Bookmarks</span>
+                  <span className="text-[9px] uppercase tracking-[3px] font-black opacity-20">{bookmarkedCompanions.length} // PINNED_NODES</span>
+                </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pb-6">
+            <AccordionContent className="pb-10">
               <CompanionsList
                 companions={bookmarkedCompanions}
                 title=""
@@ -114,16 +119,19 @@ const Profile = async () => {
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="companions" className="border rounded-2xl px-6 bg-card/30 backdrop-blur-sm overflow-hidden shadow-sm">
-            <AccordionTrigger className="hover:no-underline py-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <GraduationCapIcon className="size-5 text-primary" />
+          <AccordionItem value="companions" className="border border-white/5 bg-surface-container-low backdrop-blur-sm overflow-hidden shadow-xl px-8">
+            <AccordionTrigger className="hover:no-underline py-10 group">
+              <div className="flex items-center gap-6">
+                <div className="p-3 border border-white/10 bg-white/5 group-hover:border-magenta transition-colors">
+                  <GraduationCapIcon className="size-5 text-white/40 group-hover:text-magenta transition-colors" />
                 </div>
-                <span className="text-xl font-bold tracking-tight">My Created Companions ({companions.length})</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xl md:text-2xl font-black uppercase tracking-tighter italic text-white group-hover:text-magenta transition-colors">Personal Companions</span>
+                  <span className="text-[9px] uppercase tracking-[3px] font-black opacity-20">{companions.length} // CUSTOM_ARCHITECTURES</span>
+                </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="pb-6">
+            <AccordionContent className="pb-10">
               <CompanionsList title="" companions={companions} />
             </AccordionContent>
           </AccordionItem>
@@ -133,13 +141,14 @@ const Profile = async () => {
   );
 };
 
-const StatCard = ({ icon, value, label, className }: { icon: React.ReactNode, value: number, label: string, className?: string }) => (
-  <div className={cn("flex-1 md:w-32 p-4 rounded-2xl border flex flex-col gap-1 shadow-sm transition-all hover:shadow-md", className)}>
-    <div className="flex items-center gap-3">
+const StatCard = ({ icon, value, label }: { icon: React.ReactNode, value: number, label: string }) => (
+  <div className="flex flex-col gap-4 p-8 border border-white/5 bg-black/20 min-w-[160px] relative group overflow-hidden">
+    <div className="absolute top-0 left-0 w-px h-0 bg-magenta group-hover:h-full transition-all duration-700"></div>
+    <div className="flex items-center justify-between">
       {icon}
-      <p className="text-2xl font-bold tracking-tighter">{value}</p>
+      <p className="text-3xl font-serif italic text-white">{value}</p>
     </div>
-    <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest">{label}</div>
+    <div className="text-[9px] font-black uppercase tracking-[3px] opacity-30 group-hover:opacity-100 transition-opacity">{label}</div>
   </div>
 );
 
