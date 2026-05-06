@@ -24,7 +24,7 @@ export const getAllCompanions = async ({ limit = 10, page = 1, subject, topic }:
 
   let query = supabase
     .from('companions')
-    .select(`*, bookmarks:bookmarks!bookmarks_companion_id_fkey (user_id)`) // Adjust relationship name
+    .select(`*`)
     .range((page - 1) * limit, page * limit - 1);
 
   if (subject && topic) {
@@ -39,11 +39,21 @@ export const getAllCompanions = async ({ limit = 10, page = 1, subject, topic }:
   const { data: companions, error } = await query;
 
   if (error) throw new Error(error.message);
-  if (!userId) return companions;
+  if (!userId || !companions || companions.length === 0) return companions;
+
+  // Fetch bookmarks for this user and these companions
+  const companionIds = companions.map(c => c.id);
+  const { data: userBookmarks } = await supabase
+    .from('bookmarks')
+    .select('companion_id')
+    .eq('user_id', userId)
+    .in('companion_id', companionIds);
+
+  const bookmarkedIds = new Set(userBookmarks?.map(b => b.companion_id) || []);
 
   return companions.map(c => ({
     ...c,
-    bookmarked: c.bookmarks?.some((b: any) => b.user_id === userId),
+    bookmarked: bookmarkedIds.has(c.id),
   }));
 };
 
@@ -79,30 +89,53 @@ export const addToSessionHistory = async (companionId: string) => {
 export const getRecentSessions = async (limit = 10) => {
   const supabase = createSupabaseClient();
 
-  const { data, error } = await supabase
-    .from("recent_sessions")
-    .select("*")
-    .order("last_session_at", { ascending: false })
+  const { data: sessions, error } = await supabase
+    .from("session_history")
+    .select("companion_id, created_at")
+    .order("created_at", { ascending: false })
     .limit(limit);
 
   if (error) throw new Error(error.message);
+  if (!sessions || sessions.length === 0) return [];
 
-  return data;
+  const companionIds = sessions.map(s => s.companion_id);
+
+  const { data: companions, error: compError } = await supabase
+    .from("companions")
+    .select("*")
+    .in("id", companionIds);
+
+  if (compError) throw new Error(compError.message);
+
+  const compMap = new Map(companions?.map(c => [c.id, c]));
+  return companionIds.map(id => compMap.get(id)).filter(Boolean);
 };
 
 
 export const getUserSessions = async (userId: string, limit = 10) => {
     const supabase = createSupabaseClient();
-    const { data, error } = await supabase
+    const { data: sessions, error } = await supabase
         .from('session_history')
-        .select(`companions:companion_id (*)`)
+        .select(`companion_id, created_at`)
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(limit)
 
-    if(error) throw new Error(error.message);
+    if (error) throw new Error(error.message);
+    if (!sessions || sessions.length === 0) return [];
 
-    return data.map(({ companions }) => companions);
+    const companionIds = sessions.map(s => s.companion_id);
+
+    const { data: companions, error: compError } = await supabase
+        .from("companions")
+        .select("*")
+        .in("id", companionIds);
+
+    if (compError) throw new Error(compError.message);
+
+    // Maintain order
+    const compMap = new Map(companions?.map(c => [c.id, c]));
+    return companionIds.map(id => compMap.get(id)).filter(Boolean);
 }
 
 export const getUserCompanions = async (userId: string) => {
@@ -184,13 +217,22 @@ export const removeBookmark = async (companionId: string, path: string) => {
 // It's almost the same as getUserCompanions, but it's for the bookmarked companions
 export const getBookmarkedCompanions = async (userId: string) => {
   const supabase = createSupabaseClient();
-  const { data, error } = await supabase
+  const { data: bookmarks, error } = await supabase
     .from("bookmarks")
-    .select(`companions:companion_id (*)`) // Notice the (*) to get all the companion data
+    .select(`companion_id`)
     .eq("user_id", userId);
-  if (error) {
-    throw new Error(error.message);
-  }
-  // We don't need the bookmarks data, so we return only the companions
-  return data.map(({ companions }) => companions);
+
+  if (error) throw new Error(error.message);
+  if (!bookmarks || bookmarks.length === 0) return [];
+
+  const companionIds = bookmarks.map(b => b.companion_id);
+
+  const { data: companions, error: compError } = await supabase
+    .from("companions")
+    .select("*")
+    .in("id", companionIds);
+
+  if (compError) throw new Error(compError.message);
+
+  return companions || [];
 };

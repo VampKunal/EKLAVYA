@@ -69,6 +69,9 @@ class VoiceSdk {
       };
 
       this.recognition!.onerror = (event) => {
+        if (event.error === 'no-speech') {
+          return; // Ignore silence timeouts
+        }
         console.error('Speech recognition error:', event.error);
         this.emit('error', new Error(`Speech recognition error: ${event.error}`));
       };

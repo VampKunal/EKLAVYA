@@ -1,3 +1,5 @@
+"use server";
+
 import { getLLMResponse } from "./llm";
 
 export async function getTutorResponse(
